@@ -1,0 +1,157 @@
+:root {
+ color-scheme: dark;
+ --control-surface: #141517;
+ --control-border: #494749;
+ --control-text: #f2ede8;
+ --control-muted: #a39a95;
+ --control-accent: #ffb36e;
+ --control-selected: #35271d;
+ --scroll-track: #19191b;
+ --scroll-thumb: #655346;
+ scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+*::-webkit-scrollbar { width: 8px; height: 8px }
+*::-webkit-scrollbar-track, *::-webkit-scrollbar-corner { background: var(--scroll-track) }
+*::-webkit-scrollbar-thumb { background: var(--scroll-thumb); border: 2px solid var(--scroll-track); border-radius: 8px }
+*::-webkit-scrollbar-thumb:hover { background: #a57e5d }
+*::-webkit-scrollbar-button { display: none }
+#dialog, .picker-options, .target-options, .detail-body, .connections, .maplist, .form textarea {
+ scrollbar-width: thin;
+ scrollbar-color: var(--scroll-thumb) var(--scroll-track);
+}
+.atlas-scroll, .graph-scroll { scrollbar-width: none }
+::selection { color: #fff2e6; background: #754623 }
+
+.form input:not([type=checkbox]), .form textarea, .form .picker-trigger {
+ color: var(--control-text);
+ background: var(--control-surface);
+ border-color: var(--control-border);
+}
+.form input::placeholder, .form textarea::placeholder, .search-control input::placeholder { color: var(--control-muted) }
+.form .picker-trigger:hover, .form .picker-trigger[aria-expanded=true] {
+ border-color: #a7744e;
+ background: var(--control-selected);
+}
+.form input[type=checkbox] {
+ appearance: none;
+ display: inline-grid;
+ place-content: center;
+ flex: 0 0 17px;
+ width: 17px;
+ height: 17px;
+ padding: 0;
+ margin: 0;
+ border: 1px solid #75695f;
+ border-radius: 4px;
+ background: var(--control-surface);
+ cursor: pointer;
+}
+.form input[type=checkbox]:checked { background: var(--control-accent); border-color: var(--control-accent) }
+.form input[type=checkbox]:checked::after {
+ content: '';
+ width: 7px;
+ height: 4px;
+ border-left: 2px solid #2c1b10;
+ border-bottom: 2px solid #2c1b10;
+ transform: translateY(-1px) rotate(-45deg);
+}
+.form input[type=checkbox]:focus-visible { outline-color: var(--control-accent) }
+.form :disabled { opacity: .55; cursor: default }
+.form .target-options label, .form .optional-connect {
+ min-height: 39px;
+ padding: 8px;
+ border: 1px solid transparent;
+ border-radius: 6px;
+ transition: background-color .15s, border-color .15s;
+}
+.form .target-options label:hover, .form .optional-connect:hover { background: #242120 }
+.form .target-options label:has(:checked), .form .optional-connect:has(:checked) {
+ color: #ffcc9e;
+ background: var(--control-selected);
+ border-color: #6e4b34;
+}
+.target-options { padding-right: 4px; overscroll-behavior: contain }
+.target-options label + label { margin-top: 2px }
+.target-options small { text-align: right }
+.target-options #target-empty { color: var(--control-muted); padding: 0 8px }
+
+.search-control {
+ display: flex;
+ align-items: center;
+ min-width: 0;
+ min-height: 40px;
+ padding: 0 8px;
+ gap: 7px;
+ border: 1px solid var(--control-border);
+ border-radius: 7px;
+ background: var(--control-surface);
+ color: var(--control-text);
+}
+.search-control:focus-within { border-color: var(--control-accent); box-shadow: 0 0 0 1px #ffb36e33 }
+.search-control .search-icon, .search-control .search-clear { display: inline-flex; color: var(--control-muted) }
+.search-control svg { width: 16px; height: 16px }
+.search-control input[type=search] {
+ appearance: none;
+ min-width: 0;
+ width: 100%;
+ border: 0;
+ background: transparent;
+ color: inherit;
+ padding: 8px 0;
+ outline: none;
+ font-size: 14px;
+}
+.search-control input::-webkit-search-cancel-button { appearance: none }
+.search-control input:placeholder-shown + .search-clear { visibility: hidden }
+.search-control .search-clear { border-radius: 4px; padding: 5px; cursor: pointer }
+.search-control .search-clear:hover { color: var(--control-text); background: var(--control-selected) }
+.atlas-picker .search-control { margin: 7px 10px }
+#dialog .advanced-edge summary { display: flex; align-items: center; gap: 6px; list-style: none }
+#dialog .advanced-edge summary::-webkit-details-marker { display: none }
+.advanced-edge summary svg { width: 15px; height: 15px; transition: transform .16s }
+.advanced-edge[open] summary svg { transform: rotate(180deg) }
+#dialog.movable .dialog-title { cursor: grab; touch-action: none; user-select: none }
+#dialog.movable .dialog-title:active { cursor: grabbing }
+#dialog.floating {
+ position: fixed;
+ z-index: 40;
+ inset: auto;
+ left: var(--dialog-left);
+ top: var(--dialog-top);
+ margin: 0;
+ max-height: min(80dvh, 760px);
+}
+.dialog-grip {
+ display: inline-flex;
+ align-items: center;
+ justify-content: center;
+ width: 32px;
+ height: 30px;
+ margin-inline-start: auto;
+ color: var(--control-muted);
+ background: #272423;
+ border: 1px solid #49403a;
+ border-radius: 6px;
+ cursor: grab;
+ touch-action: none;
+}
+.dialog-grip:hover { color: var(--control-accent); border-color: #a7744e }
+.dialog-grip:active { cursor: grabbing }
+@media(max-width:650px) {
+ .form .target-options label, .form .optional-connect { min-height: 44px }
+ #dialog.floating { width: min(410px, calc(100% - 36px)); max-height: 61dvh }
+}
+@media(forced-colors:active) {
+ .form input[type=checkbox] { appearance: auto; accent-color: auto }
+ .form input[type=checkbox]::after { content: none }
+}
+body:has(#dialog.floating[open]) .atlas-picker::backdrop { background: transparent; backdrop-filter: none }
+#dialog.floating .dialog-title {
+ position: sticky;
+ top: 0;
+ z-index: 1;
+ margin: -20px -18px 0;
+ padding: 14px 18px 11px;
+ background: #18191b;
+ border-bottom: 1px solid #343235;
+}

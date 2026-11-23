@@ -1,0 +1,11 @@
+import fs from 'node:fs/promises';
+import {gunzipSync} from 'node:zlib';
+const files=await fs.readdir('web'),assets={};
+const mime={css:'text/css',js:'application/javascript',html:'text/html',svg:'image/svg+xml',md:'text/markdown'};
+for(const file of files) assets['/'+file]={body:await fs.readFile('web/'+file,'utf8'),type:mime[file.split('.').at(-1)]+'; charset=utf-8'};
+assets['/ribbon.svg']={body:gunzipSync(await fs.readFile('assets/ribbon.svg.gz')).toString('utf8'),type:'image/svg+xml; charset=utf-8'};
+assets['/SKILL.md']={body:await fs.readFile('.agents/skills/flow-atlas-maintenance/SKILL.md','utf8'),type:'text/markdown; charset=utf-8'};
+const seed=await fs.readFile('server/seed.mjs','utf8'),api=await fs.readFile('server/api.mjs','utf8');
+await fs.mkdir('dist/server',{recursive:true});await fs.mkdir('dist/.openai',{recursive:true});
+await fs.writeFile('dist/server/index.js',seed+'\nconst assets='+JSON.stringify(assets)+';\n'+api+'\nexport default {fetch:handler};\n');
+await fs.copyFile('.openai/hosting.json','dist/.openai/hosting.json');
